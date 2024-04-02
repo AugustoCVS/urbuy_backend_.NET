@@ -30,7 +30,7 @@ namespace urbuy_v1.Controllers
         {
             try
             {
-                // Procure o usuário pelo nome de usuário
+  
                 var user = await _context.AdmUsers.FirstOrDefaultAsync(u => u.Email == model.Email);
 
                 if (user == null)
@@ -38,13 +38,11 @@ namespace urbuy_v1.Controllers
                     return BadRequest("Nome de usuário ou senha incorretos.");
                 }
 
-                // Verifique a senha
                 if (!BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
                 {
                     return BadRequest("Nome de usuário ou senha incorretos.");
                 }
 
-                // Autenticação bem-sucedida, gere um token JWT
                 var token = GenerateToken(user);
 
                 return Ok(new { Token = token });
@@ -59,7 +57,6 @@ namespace urbuy_v1.Controllers
         {
             try
             {
-                // Verifique se o usuário já existe
                 var existingUser = await _context.AdmUsers.FirstOrDefaultAsync(u => u.Username == model.Username);
 
                 if (existingUser != null)
@@ -67,10 +64,8 @@ namespace urbuy_v1.Controllers
                     return BadRequest("Nome de usuário já em uso.");
                 }
 
-                // Hash da senha
                 var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
-                // Crie um novo usuário
                 var newUser = new AdmUser
                 {
                     Username = model.Username,
